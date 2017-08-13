@@ -1,0 +1,30 @@
+{
+  "name": "排雲山莊申請工具",
+  "description": "排雲山莊申請工具",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "homepage_url": "http://paiyunautoapply.hiiamyes.com/",
+  "background": {
+    "page": "src/background/build/index.html"
+  },
+  "browser_action": {
+    "default_title": "paiyun lodge auto application",
+    "default_popup": "src/browser_action/build/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["src/content_scripts/build/content_scripts.bundle.js"]
+    }
+  ],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "oauth2": {
+    "client_id": "<YOUR_CLIENT_ID>",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "key": "<YOUR_EXTENSION_PUBLIC_KEY>",
+  "permissions": ["tabs", "webNavigation", "identity", "storage"]
+}

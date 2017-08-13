@@ -1,0 +1,30 @@
+.app {
+  width: 400px;
+  padding: 1rem;
+  .title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.my-application {
+  margin-top: 1rem;
+}
+
+.contact {
+  margin-top: 1rem;
+  float: right;
+}

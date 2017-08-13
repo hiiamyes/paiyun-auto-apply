@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  justify-content: center;
+  background: #212121;
+  width: 100%;
+  color: white;
+  margin-bottom: 1rem;
+  padding: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  max-width: 1080px;
+  align-items: center;
+}
+
+.header-content > * {
+  margin: 0 1rem;
+}
