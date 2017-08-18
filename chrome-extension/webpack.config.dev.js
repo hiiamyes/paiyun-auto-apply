@@ -83,6 +83,17 @@ module.exports = {
         use: 'url-loader?limit=464600&minetype=application/font-woff',
       },
       {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+            },
+          },
+        ],
+      },
+      {
         test: /\.(ttf|eot|otf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: 'file-loader',
       },

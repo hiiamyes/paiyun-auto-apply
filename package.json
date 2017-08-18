@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "mixpanel-browser": "^2.13.0",
-    "sweetalert2": "^6.6.8"
-  }
-}

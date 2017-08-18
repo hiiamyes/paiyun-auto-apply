@@ -1,0 +1,41 @@
+@import '../../../styles/colors';
+
+.my-apply {
+  padding: 2rem;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.list {
+  flex: 1;
+  border-right: 1px solid $divider-color;
+  padding-right: 2rem;
+
+  .groupName {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .application {
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: all .2s ease;
+    background: none;
+    text-align: center;
+    &:hover {
+      background: $divider-color;
+    }
+    &.active {
+      background: $divider-color;
+    }
+  }
+}
+
+.detail {
+  flex: 3;
+  padding-left: 2rem;
+}

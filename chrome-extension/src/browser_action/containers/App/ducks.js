@@ -5,13 +5,34 @@ import moment from 'moment';
 const INIT_REQUEST = 'app/INIT_REQUEST';
 const SET_IN = 'app/SET_IN';
 
+const ROUTE_NEW_APPLY = 'ROUTE_NEW_APPLY';
+const ROUTE_MY_APPLY = 'ROUTE_MY_APPLY';
+const routePlan = `D1:
+06：00早餐
+06：30出發
+07：30登山口
+13：00排雲山莊
+14:00玉山西峰
+17：00排雲山莊（晚餐）
+18：00自由活動
+19：00就寢
+D2:
+05：30排雲山莊（早餐)
+06：00整裝出發
+08：00玉山登頂
+10：00排雲山莊
+10：30整裝返回
+16：00登山口`;
+
 const initialState = Immutable.fromJS({
+  route: ROUTE_NEW_APPLY,
   isSignInOutIng: true,
   user: null,
   application: {
     date: moment().add(30, 'd').format(),
     leader: null,
     teamMembers: null,
+    routePlan,
   },
   applicationSelecte: null,
   contact: {

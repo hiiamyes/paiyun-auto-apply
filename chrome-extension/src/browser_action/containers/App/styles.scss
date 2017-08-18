@@ -1,6 +1,8 @@
+@import '../../styles/dimensions';
+
 .app {
-  width: 400px;
-  padding: 1rem;
+  width: 800px;
+  height: 600px;
   .title {
     flex: 1;
     display: flex;
@@ -8,23 +10,7 @@
   }
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
-
-.my-application {
-  margin-top: 1rem;
-}
-
-.contact {
-  margin-top: 1rem;
-  float: right;
+.content {
+  height: calc(100% - #{$height-header});
+  overflow: auto;
 }
