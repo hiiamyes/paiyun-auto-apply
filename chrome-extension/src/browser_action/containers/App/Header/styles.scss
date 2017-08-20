@@ -1,0 +1,53 @@
+@import '../../../styles/dimensions';
+@import '../../../styles/colors';
+
+.header {
+  display: flex;
+  align-items: center;
+  background: $primary-text-color;
+  color: $primary-color-text;
+  height: $height-header;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  img {
+    height: 5rem;
+  }
+}
+
+.actions {
+  button {
+    outline: none;
+    border: none;
+    background: none;
+    color: white;
+    opacity: .4;
+    transition: all .2s ease;
+    &:hover {
+      opacity: .6;
+    }
+    &.active {
+      opacity: 1;
+    }
+  }
+  a {
+    outline: none;
+    border: none;
+    background: none;
+    color: white;
+    opacity: .4;
+    transition: all .2s ease;
+    text-decoration: none;
+    &:hover {
+      opacity: .6;
+    }
+  }
+}
+
+.name {
+  margin-right: 1rem;
+}

@@ -1,17 +1,15 @@
 import moment from 'moment';
 import cancel from './cancel';
 import inquiry from './inquiry';
-import { routePlan, calamityPlan, environmentPlan } from './assets';
+import { calamityPlan, environmentPlan } from './assets';
 import {
   goto,
   clickAndWait,
-  clickAndMuteAndWait,
   click,
   select,
   selectAndWait,
   wait,
   insert,
-  check,
   getInnerText,
 } from './util';
 
@@ -60,7 +58,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function apply(tab, user, application) {
   const { googleID } = user;
-  const { date, leader: leaderIdCardNumber, teamMembers } = application;
+  const { date, leader: leaderIdCardNumber, teamMembers, routePlan } = application;
   const s = await firebase
     .database()
     .ref(`/users/${googleID}/contacts/${leaderIdCardNumber}`)
@@ -71,7 +69,6 @@ async function apply(tab, user, application) {
     email,
     emergencyContactPersonName,
     emergencyContactPersonTel,
-    emergencyContactPersonRelationship,
     idCardNumber,
     birthday,
     tel,
@@ -79,7 +76,16 @@ async function apply(tab, user, application) {
     address,
   } = leader;
 
-  const groupName = `${name}-${moment(date).format('YYYY/MM/DD')}`;
+  const applicationCount = (await firebase
+    .database()
+    .ref('/applicationCount/0802')
+    .transaction((count) => {
+      if (count) {
+        return count + 1;
+      }
+      return 1;
+    })).snapshot.val();
+  const groupName = `${moment(date).format('MMDD')}玉山#${applicationCount}`;
 
   // apply
   const base = '#ctl00_ContentPlaceHolder1';
@@ -139,7 +145,6 @@ async function apply(tab, user, application) {
   }
 
   // fill leader's detail
-  // await goto(tab, 'https://mountain.ysnp.gov.tw/chinese/Data_Query.aspx?pg=02&w=1&n=2003');
   await clickAndWait(tab, `${base}_wucMain_Left1_wucLeftMenu1_rptSubMenu_ctl02_hylPath`);
   await insert(tab, `${base}_txtGroupName`, groupName);
   await insert(tab, `${base}_txtPID`, idCardNumber);
@@ -151,7 +156,6 @@ async function apply(tab, user, application) {
   await insert(tab, `${base}_fv_Team_txtLiaisonName`, emergencyContactPersonName);
   await insert(tab, `${base}_fv_Team_txtLiaisonTel`, emergencyContactPersonTel);
   await clickAndWait(tab, `${base}_btnSure`);
-  // await clickAndMuteAndWait(tab, `${base}_btnSure`);
 
   console.log('application success');
 }
@@ -180,11 +184,11 @@ async function addTeamMembers(tab, leader, teamMembers, teamIdentifyCode, groupN
 async function addTeamMember(googleID, teamMemberIdCardNumber, tab, i) {
   console.log('add team member');
   const base = '#ctl00_ContentPlaceHolder1';
-  const s = await firebase
+
+  const teamMember = (await firebase
     .database()
     .ref(`/users/${googleID}/contacts/${teamMemberIdCardNumber}`)
-    .once('value');
-  const teamMember = s.val();
+    .once('value')).val();
   const gender = +/^\w(\d)/.exec(teamMember.idCardNumber)[1] - 1;
   i++;
   await insert(tab, `${base}_TB_Name${i}`, teamMember.name);
@@ -207,7 +211,6 @@ async function teamMemberFill(tab, teamMemberIdCardNumber, googleID, groupName) 
     teamMember.birthday,
   ).format('MMDD')}`;
 
-  // await goto(tab, 'https://mountain.ysnp.gov.tw/chinese/Data_Query.aspx?pg=02&w=1&n=2003');
   await clickAndWait(tab, `${base}_wucMain_Left1_wucLeftMenu1_rptSubMenu_ctl02_hylPath`);
   await insert(tab, `${base}_txtGroupName`, groupName);
   await insert(tab, `${base}_txtPID`, teamMemberIdCardNumber);
@@ -220,5 +223,4 @@ async function teamMemberFill(tab, teamMemberIdCardNumber, googleID, groupName) 
   await click(tab, `${base}_fv_Team_rbMarkGPS_0`);
   await click(tab, `${base}_fv_Team_rbMarkCertificateID_0`);
   await clickAndWait(tab, `${base}_btnSure`);
-  // await clickAndMuteAndWait(tab, `${base}_btnSure`);
 }

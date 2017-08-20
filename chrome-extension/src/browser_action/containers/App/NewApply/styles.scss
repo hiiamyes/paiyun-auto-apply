@@ -1,0 +1,47 @@
+.new-apply {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  > *:nth-last-of-type(n + 2) {
+    margin-right: 2rem;
+  }
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.date {
+  flex: 1;
+}
+.trail {
+  flex: 3;
+}
+.leader {
+  flex: 1;
+}
+.team-member {
+  flex: 3;
+}
+.plan {
+  position: relative;
+  textarea {
+    resize: none;
+  }
+  button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
+
+.actions {
+  justify-content: flex-end;
+}
