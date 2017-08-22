@@ -1,6 +1,6 @@
 {
   "name": "paiyun-auto-apply-chrome-extension",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "scripts": {
     "start": "rm -rf src/background/build && rm -rf src/browser_action/build && webpack --config webpack.config.dev.js",
