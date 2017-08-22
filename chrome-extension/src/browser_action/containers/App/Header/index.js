@@ -9,32 +9,32 @@ import icon from '../../../../../icon128.png';
 
 const cx = classNames.bind(styles);
 
-class Header extends Component {
-  static signIn() {
-    function startAuth(interactive) {
-      chrome.identity.getAuthToken({ interactive: !!interactive }, (token) => {
-        if (chrome.runtime.lastError && !interactive) {
-          // console.log('It was not possible to get a token programmatically.');
-        } else if (chrome.runtime.lastError) {
-          // console.error(chrome.runtime.lastError);
-        } else if (token) {
-          const credential = firebase.auth.GoogleAuthProvider.credential(null, token);
-          firebase.auth().signInWithCredential(credential).catch((error) => {
-            // console.log('error: ', error);
-            if (error.code === 'auth/invalid-credential') {
-              chrome.identity.removeCachedAuthToken({ token }, () => {
-                startAuth(interactive);
-              });
-            }
-          });
-        } else {
-          // console.error('The OAuth Token was null');
-        }
-      });
-    }
-    startAuth(true);
+function signIn() {
+  function startAuth(interactive) {
+    chrome.identity.getAuthToken({ interactive: !!interactive }, (token) => {
+      if (chrome.runtime.lastError && !interactive) {
+        // console.log('It was not possible to get a token programmatically.');
+      } else if (chrome.runtime.lastError) {
+        // console.error(chrome.runtime.lastError);
+      } else if (token) {
+        const credential = firebase.auth.GoogleAuthProvider.credential(null, token);
+        firebase.auth().signInWithCredential(credential).catch((error) => {
+          // console.log('error: ', error);
+          if (error.code === 'auth/invalid-credential') {
+            chrome.identity.removeCachedAuthToken({ token }, () => {
+              startAuth(interactive);
+            });
+          }
+        });
+      } else {
+        // console.error('The OAuth Token was null');
+      }
+    });
   }
+  startAuth(true);
+}
 
+class Header extends Component {
   render() {
     const { route, isSignInOutIng, user, actions: { setIn } } = this.props;
     return (
@@ -80,7 +80,7 @@ class Header extends Component {
                   firebase.auth().signOut();
                 } else {
                   setIn(['isSignInOutIng'], true);
-                  this.signIn();
+                  signIn();
                 }
               }}
             >
