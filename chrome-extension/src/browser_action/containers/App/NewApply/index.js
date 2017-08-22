@@ -11,6 +11,42 @@ import styles from './styles.scss';
 import * as actions from 'containers/App/ducks';
 import * as mixpanelApp from '../../../../../mixpanels/app';
 
+const accommodationOptions = [
+  {
+    value: 1,
+    label: '排雲山莊',
+  },
+  {
+    value: 2,
+    label: '圓峰山屋',
+  },
+  {
+    value: 3,
+    label: '圓峰營地',
+  },
+];
+const trailOptions = [
+  {
+    value: 1,
+    label: '玉山主峰線 - 2天1夜',
+  },
+  {
+    value: 2,
+    label: '玉山群峰線 - 2天1夜',
+  },
+  {
+    value: 3,
+    label: '玉山群峰線 - 3天2夜',
+  },
+  {
+    value: 4,
+    label: '玉山群峰線 - 4天3夜',
+  },
+  {
+    value: 5,
+    label: '玉山群峰線 - 5天4夜',
+  },
+];
 const defaultRoutePlan = `D1:
 06：00早餐
 06：30出發
@@ -66,8 +102,10 @@ class NewApply extends Component {
           <div className={cx('field', 'trail')}>
             <div>路線</div>
             <Select
-              value="玉山主峰線 - 2天1夜"
-              options={[{ value: '玉山主峰線 - 2天1夜', label: '玉山主峰線 - 2天1夜' }]}
+              value={application.get('trail')}
+              options={trailOptions}
+              clearable={false}
+              onChange={o => setIn(['application', 'trail'], o.value)}
             />
           </div>
         </div>
@@ -110,6 +148,49 @@ class NewApply extends Component {
               }}
             />
           </div>
+        </div>
+
+        <div>宿營地點</div>
+        <div className={cx('row', 'accommodations')}>
+          <div className={cx('field', 'accommodation')}>
+            <div>{`第一天（${moment(application.get('date')).format('M/D')}）`}</div>
+            <Select
+              value={application.getIn(['accommodations', 'day1'])}
+              options={accommodationOptions}
+              clearable={false}
+              onChange={o => setIn(['application', 'accommodations', 'day1'], o.value)}
+            />
+          </div>
+          {application.get('trail') > 2 &&
+            <div className={cx('field', 'accommodation')}>
+              <div>{`第二天（${moment(application.get('date')).add(1).format('M/D')}）`}</div>
+              <Select
+                value={application.getIn(['accommodations', 'day2'])}
+                options={accommodationOptions}
+                clearable={false}
+                onChange={o => setIn(['application', 'accommodations', 'day2'], o.value)}
+              />
+            </div>}
+          {application.get('trail') > 3 &&
+            <div className={cx('field', 'accommodation')}>
+              <div>{`第三天（${moment(application.get('date')).add(2).format('M/D')}）`}</div>
+              <Select
+                value={application.getIn(['accommodations', 'day3'])}
+                options={accommodationOptions}
+                clearable={false}
+                onChange={o => setIn(['application', 'accommodations', 'day3'], o.value)}
+              />
+            </div>}
+          {application.get('trail') > 4 &&
+            <div className={cx('field', 'accommodation')}>
+              <div>{`第四天（${moment(application.get('date')).add(3).format('M/D')}）`}</div>
+              <Select
+                value={application.getIn(['accommodations', 'day4'])}
+                options={accommodationOptions}
+                clearable={false}
+                onChange={o => setIn(['application', 'accommodations', 'day4'], o.value)}
+              />
+            </div>}
         </div>
 
         <div className={cx('row', 'options')}>
