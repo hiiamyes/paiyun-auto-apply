@@ -1,7 +1,13 @@
 import moment from 'moment';
 import cancel from './cancel';
 import inquiry from './inquiry';
-import { calamityPlan, environmentPlan } from './assets';
+import {
+  calamityPlan,
+  environmentPlan,
+  trails,
+  ddlLocationIDValues,
+  ddlLiveTypeValues,
+} from './assets';
 import {
   goto,
   clickAndWait,
@@ -58,7 +64,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function apply(tab, user, application) {
   const { googleID } = user;
-  const { date, leader: leaderIdCardNumber, teamMembers, routePlan } = application;
+  const {
+    date,
+    leader: leaderIdCardNumber,
+    teamMembers,
+    routePlan,
+    trail,
+    accommodations,
+  } = application;
   const s = await firebase
     .database()
     .ref(`/users/${googleID}/contacts/${leaderIdCardNumber}`)
@@ -94,14 +107,28 @@ async function apply(tab, user, application) {
   await click(tab, '#chkAll');
   await clickAndWait(tab, `${base}_btnYes`);
   await clickAndWait(tab, `${base}_btnNext`);
-  await selectAndWait(tab, `${base}_ddlClimbType`, 11);
-  await select(tab, `${base}_ddlClimbLineID`, 1);
+  await selectAndWait(tab, `${base}_ddlClimbType`, trails[trail].climbType);
+  await select(tab, `${base}_ddlClimbLineID`, trails[trail].climbLineId);
   await wait(tab, `${base}_ddlSDate > option[value="${moment(date).format('YYYY/MM/DD')}"]`);
   await select(tab, `${base}_ddlSDate`, moment(date).format('YYYY/MM/DD'));
   await insert(tab, `${base}_txtGroupName`, groupName);
   await select(tab, `${base}_ddl_number`, `${teamMembers.length + 1}`);
   await insert(tab, `${base}_txtLeftMan`, `${emergencyContactPersonName}`);
   await insert(tab, `${base}_txtLeftTel`, `${emergencyContactPersonTel}`);
+  await select(tab, '#ddlLocationID_1', ddlLocationIDValues[accommodations.day1].value);
+  await select(tab, '#ddlLiveType_1', ddlLiveTypeValues[accommodations.day1].value);
+  if (trail > 2) {
+    await select(tab, '#ddlLocationID_2', ddlLocationIDValues[accommodations.day2].value);
+    await select(tab, '#ddlLiveType_2', ddlLiveTypeValues[accommodations.day2].value);
+  }
+  if (trail > 3) {
+    await select(tab, '#ddlLocationID_3', ddlLocationIDValues[accommodations.day3].value);
+    await select(tab, '#ddlLiveType_3', ddlLiveTypeValues[accommodations.day3].value);
+  }
+  if (trail > 4) {
+    await select(tab, '#ddlLocationID_4', ddlLocationIDValues[accommodations.day4].value);
+    await select(tab, '#ddlLiveType_4', ddlLiveTypeValues[accommodations.day4].value);
+  }
   await insert(tab, `${base}_txtRoute_Plan`, routePlan);
   await insert(tab, `${base}_txtCalamity_Plan`, calamityPlan);
   await insert(tab, `${base}_txtEnvironment_Plan`, environmentPlan);

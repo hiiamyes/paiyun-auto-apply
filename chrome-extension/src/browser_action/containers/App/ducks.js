@@ -33,6 +33,13 @@ const initialState = Immutable.fromJS({
     leader: null,
     teamMembers: null,
     routePlan,
+    trail: 1,
+    accommodations: {
+      day1: 1,
+      day2: 1,
+      day3: 1,
+      day4: 1,
+    },
   },
   applicationSelecte: null,
   contact: {

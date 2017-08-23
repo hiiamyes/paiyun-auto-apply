@@ -16,6 +16,10 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  &.accommodation {
+    max-width: 25%;
+  }
 }
 
 .date {
