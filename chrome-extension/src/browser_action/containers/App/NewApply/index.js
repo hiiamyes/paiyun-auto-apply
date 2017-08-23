@@ -205,7 +205,7 @@ class NewApply extends Component {
               className={cx('btn', 'btn-primary')}
               onClick={() => setIn(['application', 'routePlan'], defaultRoutePlan)}
             >
-              預設行程
+              回復為預設行程
             </button>
           </div>
         </div>
