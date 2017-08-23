@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 import styles from './styles.scss';
 import * as actions from 'containers/App/ducks';
 import icon from '../../../../../icon128.png';
+import { version } from '../../../../../package.json';
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +42,12 @@ class Header extends Component {
       <div className={cx('header')}>
         <div className={cx('title')}>
           <img src={icon} alt="排雲山莊申請工具" />
-          <div className={cx('title')}>排雲山莊申請工具</div>
+          <div>
+            <div className={cx('title')}>排雲山莊申請工具</div>
+            <div className={cx('version')}>
+              {`v${version}`}
+            </div>
+          </div>
         </div>
         {isSignInOutIng && <Loader color="#26A65B" size="16px" margin="4px" />}
         {!isSignInOutIng &&
