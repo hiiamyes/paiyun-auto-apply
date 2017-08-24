@@ -30,7 +30,7 @@ class Header extends Component {
       <div className="header">
         <div className="header-content">
           <div>
-            <div>排雲山莊申請工具</div>
+            <div>{`排雲山莊申請工具 v1.2.0`}</div>
             <div>
               人員清單編輯 {user ? `- ${user.name}` : ""}
             </div>

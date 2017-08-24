@@ -249,5 +249,6 @@ async function teamMemberFill(tab, teamMemberIdCardNumber, googleID, groupName) 
   await insert(tab, `${base}_fv_Team_txtLiaisonTel`, teamMember.emergencyContactPersonTel);
   await click(tab, `${base}_fv_Team_rbMarkGPS_0`);
   await click(tab, `${base}_fv_Team_rbMarkCertificateID_0`);
+  await click(tab, `${base}_fv_Team_rbMarkYuanfong_1`);
   await clickAndWait(tab, `${base}_btnSure`);
 }
