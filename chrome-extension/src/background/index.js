@@ -91,7 +91,7 @@ async function apply(tab, user, application) {
 
   const applicationCount = (await firebase
     .database()
-    .ref('/applicationCount/0802')
+    .ref(`/applicationCount/${moment(date).format('MMDD')}`)
     .transaction((count) => {
       if (count) {
         return count + 1;
