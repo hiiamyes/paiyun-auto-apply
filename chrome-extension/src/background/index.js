@@ -99,6 +99,7 @@ async function apply(tab, user, application) {
       return 1;
     })).snapshot.val();
   const groupName = `${moment(date).format('MMDD')}玉山#${applicationCount}`;
+  const gender = +/^\w(\d)/.exec(idCardNumber)[1] - 1;
 
   // apply
   const base = '#ctl00_ContentPlaceHolder1';
@@ -136,6 +137,7 @@ async function apply(tab, user, application) {
   await insert(tab, `${base}_fvDetail_txtName`, name);
   await insert(tab, `${base}_fvDetail_txtEmail`, email);
   await insert(tab, `${base}_fvDetail_txtPID`, idCardNumber);
+  await click(tab, `${base}_fvDetail_rbGender_${gender}`);
   await insert(
     tab,
     `${base}_fvDetail_txtBirthday`,
