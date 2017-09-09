@@ -78,9 +78,10 @@ class NewApply extends Component {
       user && user.has('contacts')
         ? user
           .get('contacts')
-          .map(c => ({
-            value: c.get('idCardNumber'),
-            label: `${c.get('name')}${c.get('idCardNumber').slice(0, 4)}...`,
+          .map((c, key) => ({
+            value: key,
+            label: `${c.get('name')} ${c.get('idCardNumber').slice(0, 4) ||
+                c.get('passportNumber').slice(0, 4)}...`,
           }))
           .toList()
           .toJS()
