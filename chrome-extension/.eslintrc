@@ -3,9 +3,11 @@
   "globals": {
     "window": false,
     "chrome": false,
-    "firebase": false
+    "firebase": false,
+    "document": false
   },
   "rules": {
+    "no-await-in-loop": "off",
     "jsx-a11y/href-no-hash": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/prop-types": [0],

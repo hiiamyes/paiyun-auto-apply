@@ -65,6 +65,52 @@ function wait(tab, selector) {
   });
 }
 
+function waitForValue(tab, selector) {
+  console.log('waitForValue');
+  return new Promise((resolve) => {
+    const intervalID = window.setInterval(() => {
+      chrome.tabs.sendMessage(tab.id, { action: 'waitForValue', selector }, (isElementHasValue) => {
+        if (isElementHasValue) {
+          resolve();
+          window.clearInterval(intervalID);
+        }
+      });
+    }, 500);
+  });
+}
+
+function waitForDisappear(tab, selector) {
+  console.log('waitForDisappear');
+  return new Promise((resolve) => {
+    const intervalID = window.setInterval(() => {
+      chrome.tabs.sendMessage(
+        tab.id,
+        { action: 'waitForDisappear', selector },
+        (isElementDisappear) => {
+          if (isElementDisappear) {
+            resolve();
+            window.clearInterval(intervalID);
+          }
+        },
+      );
+    }, 500);
+  });
+}
+
+function waitForNodeAdded(tab, iNode) {
+  console.log('waitForNodeAdded');
+  return new Promise((resolve) => {
+    const intervalID = window.setInterval(() => {
+      chrome.tabs.sendMessage(tab.id, { action: 'waitForNodeAdded', iNode }, (isNodeAdded) => {
+        if (isNodeAdded) {
+          resolve();
+          window.clearInterval(intervalID);
+        }
+      });
+    }, 500);
+  });
+}
+
 function select(tab, selector, value) {
   console.log('select');
   return new Promise((resolve, reject) => {
@@ -115,4 +161,18 @@ function getInnerText(tab, selector) {
   });
 }
 
-export { goto, click, clickAndWait, clickAndMuteAndWait, wait, select, selectAndWait, insert, check, getInnerText };
+export {
+  goto,
+  click,
+  clickAndWait,
+  clickAndMuteAndWait,
+  wait,
+  select,
+  selectAndWait,
+  insert,
+  check,
+  getInnerText,
+  waitForValue,
+  waitForDisappear,
+  waitForNodeAdded,
+};

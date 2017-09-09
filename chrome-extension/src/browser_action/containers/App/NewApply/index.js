@@ -237,6 +237,20 @@ class NewApply extends Component {
           >
             編輯人員清單
           </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              chrome.runtime.sendMessage({
+                action: 'apply-shei-pa',
+                user,
+                application: application
+                  .update('leader', l => l.get('value'))
+                  .update('teamMembers', ts => (ts ? ts.map(t => t.get('value')) : [])),
+              });
+            }}
+          >
+            雪山
+          </button>
         </div>
       </div>
     );

@@ -18,6 +18,7 @@ import {
   insert,
   getInnerText,
 } from './util';
+import sheipaApply from './shei-pa/apply';
 
 import firebaseConfig from '../../configs/firebaseConfig';
 
@@ -54,6 +55,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           console.log('cancel err: ', err);
         }
       });
+      break;
+    }
+    case 'apply-shei-pa': {
+      sheipaApply({ user, application });
       break;
     }
     default: {
