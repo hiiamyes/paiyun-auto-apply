@@ -17,32 +17,41 @@ class App extends Component {
     this.state = {
       user: null,
       isSignInOuting: true,
-      contact: null
+      userKey: null
     };
     firebase.initializeApp(firebaseConfig);
     firebase.auth().onAuthStateChanged(user => {
-      console.log("qq: ", user);
       if (user) {
         const { uid: googleID, displayName: name, email } = user;
-        firebase.database().ref(`/users/${googleID}`).once("value").then(s => {
-          if (s.val()) {
-            this.setState({ user: s.val() });
-          } else {
-            const user = {
-              googleID,
-              name,
-              email,
-              contacts: []
-            };
-            firebase.database().ref(`users/${googleID}`).set(user);
-            this.setState({ user });
-          }
-          this.setState({ isSignInOuting: false });
-        });
+        firebase
+          .database()
+          .ref(`/users/${googleID}`)
+          .once("value")
+          .then(s => {
+            if (s.val()) {
+              this.setState({ user: s.val() });
+            } else {
+              const user = {
+                googleID,
+                name,
+                email,
+                contacts: []
+              };
+              firebase
+                .database()
+                .ref(`users/${googleID}`)
+                .set(user);
+              this.setState({ user });
+            }
+            this.setState({ isSignInOuting: false });
+          });
 
-        firebase.database().ref(`/users/${googleID}`).on("value", s => {
-          if (s.val()) this.setState({ user: s.val() });
-        });
+        firebase
+          .database()
+          .ref(`/users/${googleID}`)
+          .on("value", s => {
+            if (s.val()) this.setState({ user: s.val() });
+          });
       } else {
         this.setState({ user });
         this.setState({ isSignInOuting: false });
@@ -50,39 +59,43 @@ class App extends Component {
     });
   }
   render() {
-    const { user, contact } = this.state;
+    const { user, userKey } = this.state;
     const contactOptions =
       user && user.contacts
-        ? _.map(user.contacts, c => ({
-            value: c.idCardNumber,
-            label: `${c.name}${c.idCardNumber.slice(0, 4)}...`
+        ? _.map(user.contacts, (c, key) => ({
+            value: key,
+            label: `${c.name}${c.idCardNumber.slice(0, 4) ||
+              c.passportNumber.slice(0, 4)}...`
           }))
         : [];
     return (
       <div className="app">
         <Header {...this.props} {...this.state} />
-        {user &&
+        {user && (
           <div className="editor">
             <div className="contacts">
               <span>{`更新、刪除人員清單`}</span>
               <Select
-                value={contact}
+                value={userKey}
                 options={contactOptions}
-                onChange={contact => {
-                  this.setState({ contact });
+                onChange={o => {
+                  this.setState({ userKey: o.value });
                 }}
               />
-              {contact &&
+              {userKey && (
                 <EditDelete
-                  contact={user.contacts[contact.value]}
-                  onDelete={() => this.setState({ contact: null })}
+                  userKey={userKey}
+                  contact={user.contacts[userKey]}
+                  onDelete={() => this.setState({ userKey: null })}
                   user={user}
-                />}
+                />
+              )}
             </div>
             <div className="new">
               <New user={user} />
             </div>
-          </div>}
+          </div>
+        )}
       </div>
     );
   }

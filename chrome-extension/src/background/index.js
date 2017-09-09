@@ -64,18 +64,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function apply(tab, user, application) {
   const { googleID } = user;
-  const {
-    date,
-    leader: leaderIdCardNumber,
-    teamMembers,
-    routePlan,
-    trail,
-    accommodations,
-  } = application;
-  const s = await firebase
-    .database()
-    .ref(`/users/${googleID}/contacts/${leaderIdCardNumber}`)
-    .once('value');
+  const { date, leader: leaderKey, teamMembers, routePlan, trail, accommodations } = application;
+  const s = await firebase.database().ref(`/users/${googleID}/contacts/${leaderKey}`).once('value');
   const leader = s.val();
   const {
     name,
@@ -88,6 +78,7 @@ async function apply(tab, user, application) {
     cellPhone,
     address,
   } = leader;
+  let { gender } = leader;
 
   const applicationCount = (await firebase
     .database()
@@ -99,7 +90,10 @@ async function apply(tab, user, application) {
       return 1;
     })).snapshot.val();
   const groupName = `${moment(date).format('MMDD')}玉山#${applicationCount}`;
-  const gender = +/^\w(\d)/.exec(idCardNumber)[1] - 1;
+  if (!gender) {
+    gender = +/^\w(\d)/.exec(idCardNumber)[1] === 1 ? 'male' : 'female';
+  }
+  gender = gender === 'male' ? 0 : 1;
 
   // apply
   const base = '#ctl00_ContentPlaceHolder1';
@@ -168,8 +162,8 @@ async function apply(tab, user, application) {
 
     // fill team members
     for (const i in teamMembers) {
-      const teamMemberIdCardNumber = teamMembers[i];
-      await teamMemberFill(tab, teamMemberIdCardNumber, googleID, groupName);
+      const teamMemberUserKey = teamMembers[i];
+      await teamMemberFill(tab, teamMemberUserKey, googleID, groupName);
     }
   }
 
@@ -186,6 +180,12 @@ async function apply(tab, user, application) {
   await insert(tab, `${base}_fv_Team_txtLiaisonTel`, emergencyContactPersonTel);
   await clickAndWait(tab, `${base}_btnSure`);
 
+  // 申請進度查詢
+  await clickAndWait(tab, `${base}_wucMain_Left1_wucLeftMenu1_rptSubMenu_ctl01_hylPath`);
+  await insert(tab, `${base}_txtSysCode`, applicationNumber);
+  await insert(tab, `${base}_txtID`, teamIdentifyCode);
+  await clickAndWait(tab, `${base}_btmSure`);
+
   console.log('application success');
 }
 
@@ -200,9 +200,7 @@ async function addTeamMembers(tab, leader, teamMembers, teamIdentifyCode, groupN
   await clickAndWait(tab, `${base}_btmSure2`);
   await clickAndWait(tab, `${base}_btnNext`);
   await Promise.all(
-    teamMembers.map((teamMemberIdCardNumber, i) =>
-      addTeamMember(googleID, teamMemberIdCardNumber, tab, i),
-    ),
+    teamMembers.map((teamMemberUserKey, i) => addTeamMember(googleID, teamMemberUserKey, tab, i)),
   );
   await insert(tab, `${base}_tbAgentName`, leader.name);
   await insert(tab, `${base}_tbAgentTel`, leader.cellPhone);
@@ -210,30 +208,55 @@ async function addTeamMembers(tab, leader, teamMembers, teamIdentifyCode, groupN
   await clickAndWait(tab, `${base}_btnNext`);
 }
 
-async function addTeamMember(googleID, teamMemberIdCardNumber, tab, i) {
+async function addTeamMember(googleID, teamMemberUserKey, tab, i) {
   console.log('add team member');
   const base = '#ctl00_ContentPlaceHolder1';
 
   const teamMember = (await firebase
     .database()
-    .ref(`/users/${googleID}/contacts/${teamMemberIdCardNumber}`)
+    .ref(`/users/${googleID}/contacts/${teamMemberUserKey}`)
     .once('value')).val();
-  const gender = +/^\w(\d)/.exec(teamMember.idCardNumber)[1] - 1;
+  let gender;
+  if (teamMember.gender) {
+    gender = teamMember.gender;
+  } else {
+    gender = +/^\w(\d)/.exec(teamMember.idCardNumber)[1] === 1 ? 'male' : 'female';
+  }
+  gender = gender === 'male' ? 0 : 1;
+
   i++;
   await insert(tab, `${base}_TB_Name${i}`, teamMember.name);
+
+  await insert(tab, `${base}_TB_Name${i}`, teamMember.name);
+
+  const nationality = {
+    TW: '01',
+    JP: '02',
+    KR: '03',
+    SG: '04',
+    CN: '05',
+    HK: '06',
+    EUUS: '07',
+    Others: '08',
+  };
+  await select(tab, `${base}_DDL_Nationality${i}`, nationality[teamMember.countryCode || 'TW']);
   await insert(tab, `${base}_TB_EMail${i}`, teamMember.email);
-  await insert(tab, `${base}_TB_PID${i}`, teamMember.idCardNumber);
+  await insert(
+    tab,
+    `${base}_TB_PID${i}`,
+    (teamMember.countryCode || 'TW') === 'TW' ? teamMember.idCardNumber : teamMember.passportNumber,
+  );
   await insert(tab, `${base}_TB_Phone${i}`, teamMember.tel);
   await insert(tab, `${base}_TB_CellPhone${i}`, teamMember.cellPhone);
   await click(tab, `${base}_rbGender${i}_${gender}`);
 }
 
-async function teamMemberFill(tab, teamMemberIdCardNumber, googleID, groupName) {
+async function teamMemberFill(tab, teamMemberUserKey, googleID, groupName) {
   console.log('fill team member detail');
   const base = '#ctl00_ContentPlaceHolder1';
   const s = await firebase
     .database()
-    .ref(`/users/${googleID}/contacts/${teamMemberIdCardNumber}`)
+    .ref(`/users/${googleID}/contacts/${teamMemberUserKey}`)
     .once('value');
   const teamMember = s.val();
   const chineseBirthday = `${+moment(teamMember.birthday).year() - 1911}${moment(
@@ -242,7 +265,7 @@ async function teamMemberFill(tab, teamMemberIdCardNumber, googleID, groupName) 
 
   await clickAndWait(tab, `${base}_wucMain_Left1_wucLeftMenu1_rptSubMenu_ctl02_hylPath`);
   await insert(tab, `${base}_txtGroupName`, groupName);
-  await insert(tab, `${base}_txtPID`, teamMemberIdCardNumber);
+  await insert(tab, `${base}_txtPID`, teamMember.idCardNumber || teamMember.passportNumber);
   await clickAndWait(tab, `${base}_btmSure`);
   await clickAndWait(tab, `${base}_gvIndex_ctl02_btnTeams`);
   await insert(tab, `${base}_fv_Team_txtBirth`, chineseBirthday);
