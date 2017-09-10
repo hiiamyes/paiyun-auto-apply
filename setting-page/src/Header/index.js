@@ -30,16 +30,15 @@ class Header extends Component {
       <div className="header">
         <div className="header-content">
           <div>
-            <div>{`排雲山莊申請工具 v1.2.0`}</div>
-            <div>
-              人員清單編輯 {user ? `- ${user.name}` : ""}
-            </div>
+            <div>{`排雲山莊申請工具 v1.3.0`}</div>
+            <div>人員清單編輯 {user ? `- ${user.name}` : ""}</div>
           </div>
 
-          {isSignInOuting &&
-            <Loader className="loader" color="#26A65B" size="10px" />}
+          {isSignInOuting && (
+            <Loader className="loader" color="#26A65B" size="10px" />
+          )}
 
-          {!isSignInOuting &&
+          {!isSignInOuting && (
             <button
               className="btn btn-primary"
               onClick={() => {
@@ -49,8 +48,9 @@ class Header extends Component {
               }}
             >
               Chrome 擴充功能
-            </button>}
-          {!isSignInOuting &&
+            </button>
+          )}
+          {!isSignInOuting && (
             <button
               className="btn btn-primary"
               onClick={() => {
@@ -64,8 +64,9 @@ class Header extends Component {
               }}
             >
               隱私權政策
-            </button>}
-          {!isSignInOuting &&
+            </button>
+          )}
+          {!isSignInOuting && (
             <button
               className="btn btn-primary"
               onClick={() => {
@@ -75,9 +76,10 @@ class Header extends Component {
               }}
             >
               聯絡我
-            </button>}
+            </button>
+          )}
 
-          {!isSignInOuting &&
+          {!isSignInOuting && (
             <button
               className="btn btn-primary"
               onClick={() => {
@@ -93,7 +95,8 @@ class Header extends Component {
               }}
             >
               {user ? "登出" : "以 Google 帳號登入"}
-            </button>}
+            </button>
+          )}
           <GitHubButton
             type="stargazers"
             namespace="hiiamyes"
