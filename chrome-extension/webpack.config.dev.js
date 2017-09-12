@@ -9,6 +9,7 @@ module.exports = {
     background: ['babel-polyfill', './src/background/index.js'],
     browser_action: './src/browser_action/index.js',
     content_scripts: './src/content_scripts/index.js',
+    content_scripts_float: './src/content_scripts_float/index.js',
   },
   output: {
     path: __dirname,
