@@ -53,6 +53,12 @@ class Header extends Component {
         {!isSignInOutIng &&
           <div className={cx('actions')}>
             <button
+              className={cx({ active: route === 'ROUTE_SHEIPA_APPLY' })}
+              onClick={() => setIn(['route'], 'ROUTE_SHEIPA_APPLY')}
+            >
+              雪山申請 Beta!
+            </button>
+            <button
               className={cx({ active: route === 'ROUTE_NEW_APPLY' })}
               onClick={() => setIn(['route'], 'ROUTE_NEW_APPLY')}
             >

@@ -16,6 +16,7 @@ import * as mixpanelApp from '../../../../mixpanels/app';
 import Header from './Header';
 import MyApply from './MyApply';
 import NewApply from './NewApply';
+import SheipaApply from './SheipaApply';
 
 toastr.options = {
   positionClass: 'toast-top-center',
@@ -48,6 +49,7 @@ class App extends Component {
         <div className={cx('content')}>
           {!isSignInOutIng && user && route === 'ROUTE_MY_APPLY' && <MyApply />}
           {!isSignInOutIng && user && route === 'ROUTE_NEW_APPLY' && <NewApply />}
+          {!isSignInOutIng && user && route === 'ROUTE_SHEIPA_APPLY' && <SheipaApply />}
         </div>
       </div>
     );

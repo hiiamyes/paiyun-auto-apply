@@ -69,6 +69,7 @@ export default function reducer(state = initialState, action) {
 
 export const init = user => (dispatch, getState) => {
   const { uid: googleID, displayName: name, email } = user;
+
   firebase.database().ref(`/users/${googleID}`).on('value', (s) => {
     if (s.val()) {
       dispatch({ type: INIT_REQUEST, user: s.val() });

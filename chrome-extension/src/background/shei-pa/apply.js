@@ -25,14 +25,7 @@ function getActiveTab() {
 export default async function sheipaApply({ user, application }) {
   // 申請人資料
   const { googleID } = user;
-  const {
-    date,
-    leader: leaderIdCardNumber,
-    teamMembers,
-    routePlan,
-    trail,
-    accommodations,
-  } = application;
+  const { date, leader: leaderKey, teamMembers, routePlan, trail, accommodations } = application;
   const {
     name,
     email,
@@ -45,7 +38,7 @@ export default async function sheipaApply({ user, application }) {
     address,
   } = (await firebase
     .database()
-    .ref(`/users/${googleID}/contacts/${leaderIdCardNumber}`)
+    .ref(`/users/${googleID}/contacts/${leaderKey}`)
     .once('value')).val();
 
   const tab = (await getActiveTab())[0];
@@ -101,7 +94,7 @@ export default async function sheipaApply({ user, application }) {
   await insert(tab, `${base}apply_mobile`, cellPhone);
   await insert(tab, `${base}apply_email`, email);
   await insert(tab, `${base}apply_nation`, '中華民國');
-  await insert(tab, `${base}apply_sid`, leaderIdCardNumber);
+  await insert(tab, `${base}apply_sid`, idCardNumber);
   await insert(tab, `${base}apply_sex`, '男');
   await insert(tab, `${base}apply_birthday`, moment(birthday).format('YYYY-MM-DD'));
 
@@ -114,7 +107,7 @@ export default async function sheipaApply({ user, application }) {
   await insert(tab, `${base}leader_mobile`, cellPhone);
   await insert(tab, `${base}leader_email`, email);
   await insert(tab, `${base}leader_nation`, '中華民國');
-  await insert(tab, `${base}leader_sid`, leaderIdCardNumber);
+  await insert(tab, `${base}leader_sid`, idCardNumber);
   await insert(tab, `${base}leader_sex`, '男');
   await insert(tab, `${base}leader_birthday`, moment(birthday).format('YYYY-MM-DD'));
   await insert(tab, `${base}leader_contactname`, emergencyContactPersonName);
@@ -140,15 +133,15 @@ export default async function sheipaApply({ user, application }) {
   }
 
   // 留守人資料
-  await click(tab, '#menuhref4');
-  await wait(tab, `${base}stay_name`);
-  await insert(tab, `${base}stay_name`, name);
-  await insert(tab, `${base}stay_tel`, tel);
-  await insert(tab, `${base}stay_addr`, address);
-  await insert(tab, `${base}stay_mobile`, cellPhone);
-  await insert(tab, `${base}stay_email`, email);
-  await insert(tab, `${base}stay_nation`, '中華民國');
-  await insert(tab, `${base}stay_sid`, stayIdCardNumber);
-  await insert(tab, `${base}stay_sex`, '男');
-  await insert(tab, `${base}stay_birthday`, moment(birthday).format('YYYY-MM-DD'));
+  // await click(tab, '#menuhref4');
+  // await wait(tab, `${base}stay_name`);
+  // await insert(tab, `${base}stay_name`, name);
+  // await insert(tab, `${base}stay_tel`, tel);
+  // await insert(tab, `${base}stay_addr`, address);
+  // await insert(tab, `${base}stay_mobile`, cellPhone);
+  // await insert(tab, `${base}stay_email`, email);
+  // await insert(tab, `${base}stay_nation`, '中華民國');
+  // await insert(tab, `${base}stay_sid`, stayIdCardNumber);
+  // await insert(tab, `${base}stay_sex`, '男');
+  // await insert(tab, `${base}stay_birthday`, moment(birthday).format('YYYY-MM-DD'));
 }
