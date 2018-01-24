@@ -22,12 +22,12 @@ class MyApply extends Component {
     return (
       <div className={cx('my-apply')}>
         {applications === [] && <div>沒有任何申請</div>}
-        {applications !== [] &&
+        {applications !== [] && (
           <div className={cx('container')}>
             <div className={cx('list')}>
               <div className={cx('groupName')}>隊名</div>
-              {applications.map(application =>
-                (<div
+              {applications.map(application => (
+                <div
                   className={cx('application', {
                     active:
                       applicationSelected &&
@@ -39,15 +39,13 @@ class MyApply extends Component {
                     setIn(['applicationSelected'], application);
                   }}
                 >
-                  <div>
-                    {application.groupName}
-                  </div>
-                </div>),
-              )}
+                  <div>{application.groupName}</div>
+                </div>
+              ))}
             </div>
 
             <div className={cx('detail')}>
-              {applicationSelected &&
+              {applicationSelected && (
                 <div>
                   <div>
                     <p>{`隊伍名稱：${applicationSelected.get('groupName')}`}</p>
@@ -63,7 +61,6 @@ class MyApply extends Component {
                           user,
                           applicationNumber: applicationSelected.get('applicationNumber'),
                         });
-                        // mixpanelApp.clickCheckApply();
                       }}
                     >
                       申請進度查詢
@@ -71,7 +68,6 @@ class MyApply extends Component {
                     <button
                       className="btn btn-danger"
                       onClick={() => {
-                        console.log(applicationSelected);
                         chrome.runtime.sendMessage({
                           action: 'cancel',
                           user,
@@ -83,9 +79,11 @@ class MyApply extends Component {
                       取消申請
                     </button>
                   </div>
-                </div>}
+                </div>
+              )}
             </div>
-          </div>}
+          </div>
+        )}
       </div>
     );
   }
@@ -96,7 +94,11 @@ export default connect(
     const user = AppReducer.get('user');
     return {
       applications: user.has('applications')
-        ? user.get('applications').filter(a => a.get('status') !== 'cancel').toList().toJS()
+        ? user
+          .get('applications')
+          .filter(a => a.get('status') !== 'cancel')
+          .toList()
+          .toJS()
         : [],
       user,
       application: AppReducer.get('application'),

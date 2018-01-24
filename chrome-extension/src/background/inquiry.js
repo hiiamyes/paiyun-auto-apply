@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { goto, insert, clickAndWait } from './util';
 
 const base = '#ctl00_ContentPlaceHolder1';

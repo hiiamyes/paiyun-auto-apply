@@ -29,7 +29,9 @@ const initialState = Immutable.fromJS({
   isSignInOutIng: true,
   user: null,
   application: {
-    date: moment().add(30, 'd').format(),
+    date: moment()
+      .add(30, 'd')
+      .format(),
     leader: null,
     teamMembers: null,
     routePlan,
@@ -69,20 +71,26 @@ export default function reducer(state = initialState, action) {
 
 export const init = user => (dispatch, getState) => {
   const { uid: googleID, displayName: name, email } = user;
-  firebase.database().ref(`/users/${googleID}`).on('value', (s) => {
-    if (s.val()) {
-      dispatch({ type: INIT_REQUEST, user: s.val() });
-    } else {
-      const user = {
-        googleID,
-        name,
-        email,
-        contacts: [],
-      };
-      firebase.database().ref(`users/${googleID}`).set(user);
-      dispatch({ type: INIT_REQUEST, user });
-    }
-  });
+  firebase
+    .database()
+    .ref(`/users/${googleID}`)
+    .on('value', (s) => {
+      if (s.val()) {
+        dispatch({ type: INIT_REQUEST, user: s.val() });
+      } else {
+        const user = {
+          googleID,
+          name,
+          email,
+          contacts: [],
+        };
+        firebase
+          .database()
+          .ref(`users/${googleID}`)
+          .set(user);
+        dispatch({ type: INIT_REQUEST, user });
+      }
+    });
 };
 
 export const setIn = (path, value) => ({ type: SET_IN, path, value });

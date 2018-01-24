@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 function goto(tab, url) {
   console.log('goto');
   return new Promise((resolve, reject) => {
@@ -115,4 +113,15 @@ function getInnerText(tab, selector) {
   });
 }
 
-export { goto, click, clickAndWait, clickAndMuteAndWait, wait, select, selectAndWait, insert, check, getInnerText };
+export {
+  goto,
+  click,
+  clickAndWait,
+  clickAndMuteAndWait,
+  wait,
+  select,
+  selectAndWait,
+  insert,
+  check,
+  getInnerText,
+};

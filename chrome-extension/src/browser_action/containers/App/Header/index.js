@@ -19,14 +19,17 @@ function signIn() {
         // console.error(chrome.runtime.lastError);
       } else if (token) {
         const credential = firebase.auth.GoogleAuthProvider.credential(null, token);
-        firebase.auth().signInWithCredential(credential).catch((error) => {
-          // console.log('error: ', error);
-          if (error.code === 'auth/invalid-credential') {
-            chrome.identity.removeCachedAuthToken({ token }, () => {
-              startAuth(interactive);
-            });
-          }
-        });
+        firebase
+          .auth()
+          .signInWithCredential(credential)
+          .catch((error) => {
+            // console.log('error: ', error);
+            if (error.code === 'auth/invalid-credential') {
+              chrome.identity.removeCachedAuthToken({ token }, () => {
+                startAuth(interactive);
+              });
+            }
+          });
       } else {
         // console.error('The OAuth Token was null');
       }
@@ -44,13 +47,11 @@ class Header extends Component {
           <img src={icon} alt="排雲山莊申請工具" />
           <div>
             <div className={cx('title')}>排雲山莊申請工具</div>
-            <div className={cx('version')}>
-              {`v${version}`}
-            </div>
+            <div className={cx('version')}>{`v${version}`}</div>
           </div>
         </div>
         {isSignInOutIng && <Loader color="#26A65B" size="16px" margin="4px" />}
-        {!isSignInOutIng &&
+        {!isSignInOutIng && (
           <div className={cx('actions')}>
             <button
               className={cx({ active: route === 'ROUTE_NEW_APPLY' })}
@@ -71,13 +72,11 @@ class Header extends Component {
             >
               聯絡作者
             </button>
-          </div>}
-        {!isSignInOutIng &&
+          </div>
+        )}
+        {!isSignInOutIng && (
           <div>
-            {user &&
-              <span className={cx('name')}>
-                {user.get('name')}
-              </span>}
+            {user && <span className={cx('name')}>{user.get('name')}</span>}
             <button
               className="btn btn-primary"
               onClick={() => {
@@ -92,7 +91,8 @@ class Header extends Component {
             >
               {user ? '登出' : '以 Google 帳號登入'}
             </button>
-          </div>}
+          </div>
+        )}
       </div>
     );
   }
